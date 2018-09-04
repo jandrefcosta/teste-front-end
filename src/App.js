@@ -6,6 +6,8 @@ class App extends Component {
 
 	constructor(props) {
 		super(props);
+		this.app_container 		= "	";
+		this.gallerry_container = "gallery-container";
 		this.KEY = 'AIzaSyCrLdnJGIICYiONBatfk-59h02AESqegJk';
 		this.url_search = 'https://www.googleapis.com/youtube/v3/search';
 
@@ -24,9 +26,12 @@ class App extends Component {
 		const url_src = new URL(this.url_search)
 
 		this.search = {
+			key: this.KEY,
 			part: 'id,snippet',
-			q: this.state.search,
-			key: this.KEY
+			maxResults: 25,
+			order: 'viewCount',
+			type:'video',
+			q: this.state.search
 		}
 		Object.keys(this.search).forEach( key => url_src.searchParams.append(key, this.search[key]) )
 		fetch(url_src)
@@ -44,9 +49,15 @@ class App extends Component {
 
 	rendererResultsVideos(){
 		const videos = this.state.videos.map((video , index) => {
-      		return( <div className="video-thumbs" key={index}> 
-      					<img src={video.snippet.thumbnails.medium.url} alt=""/> 
-      				</div> 
+      		return( <Grid key={index} item xs={12} sm={4} md={3}> 
+      					<div className="video-thumbs">
+	      					<img src={video.snippet.thumbnails.medium.url} alt=""/> 
+	      					<h4>{video.snippet.title}</h4>
+	      					<h6>{video.snippet.channelTitle}</h6>
+	      					<p>{video.snippet.description}</p>
+	      					<button>Detalhes</button>
+	      				</div>
+      				</Grid> 
       		);
     	})
     	return videos;
@@ -56,24 +67,25 @@ class App extends Component {
 
 	render() {
 		return (
-			<Grid className="App" container spacing={24}>        		
-				<Grid item xs={12}> 
-					<header className="App-header">
-						<h1 className="App-title">Search YouTube Videos</h1>
-					</header>
-				</Grid>
-				<Grid item xs={12}> 
-					<div className="container">
+			<div className="App">
+				<Grid className={this.app_container} container >
+					<Grid item xs={12}>
+						<header className="App-header">
+							<h1 className="App-title">Search YouTube Videos</h1>
+						</header>
+					</Grid>
+
+					<Grid item xs={12}>
 						<form onSubmit={this.handleSubmit}>
 							<input type="text" name="search" onChange={this.handleChange}/>
 							<input type="submit" value="Submit" />
 						</form>
-					</div>
-					<div className="gallery-container" id="gallery">
+					</Grid>
+					<Grid className={this.gallerry_container} item xs={12} container spacing={16} alignItems="stretch" id="gallery">
 						{this.rendererResultsVideos()}
-					</div>
+					</Grid>
 				</Grid>
-			</Grid>
+			</div>
 		);
 	}
 }
