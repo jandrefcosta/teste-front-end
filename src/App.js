@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import VideoComponent from './components/VideoComponent';
 import './App.css';
 import Grid from '@material-ui/core/Grid';
 
@@ -6,12 +7,13 @@ class App extends Component {
 
 	constructor(props) {
 		super(props);
-		this.app_container 		= "	";
+		this.app_container 		= "app-container";
 		this.gallerry_container = "gallery-container";
+		
 		this.KEY = 'AIzaSyCrLdnJGIICYiONBatfk-59h02AESqegJk';
 		this.url_search = 'https://www.googleapis.com/youtube/v3/search';
 
-		this.state 	= {search: '', videos: []};
+		this.state 	= {search: '', videos: [], showPopup: false, videoid: ''};
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -33,7 +35,9 @@ class App extends Component {
 			type:'video',
 			q: this.state.search
 		}
+
 		Object.keys(this.search).forEach( key => url_src.searchParams.append(key, this.search[key]) )
+
 		fetch(url_src)
 		.then(res => res.json())
 		.then(
@@ -47,20 +51,31 @@ class App extends Component {
 		)
 	}
 
+	togglePopup(param, e) {
+		this.setState({
+			showPopup: !this.state.showPopup,
+			videoid: param
+		});
+	}
+
 	rendererResultsVideos(){
-		const videos = this.state.videos.map((video , index) => {
-      		return( <Grid key={index} item xs={12} sm={4} md={3}> 
-      					<div className="video-thumbs">
-	      					<img src={video.snippet.thumbnails.medium.url} alt=""/> 
-	      					<h4>{video.snippet.title}</h4>
-	      					<h6>{video.snippet.channelTitle}</h6>
-	      					<p>{video.snippet.description}</p>
-	      					<button>Detalhes</button>
-	      				</div>
-      				</Grid> 
-      		);
-    	})
-    	return videos;
+		if (this.state.videos!=undefined){
+			const videos = this.state.videos.map((video , index) => {
+	      		return( <Grid key={index} item xs={12} sm={4} md={3}> 
+	      					<div className="video-thumbs">
+		      					<img src={video.snippet.thumbnails.medium.url} alt=""/> 
+		      					<h4>{video.snippet.title}</h4>
+		      					<h6>{video.snippet.channelTitle}</h6>
+		      					<p>{video.snippet.description}</p>
+		      					<button onClick={this.togglePopup.bind(this, video.id.videoId)} >Detalhes</button>
+		      				</div>
+	      				</Grid> 
+	      		);
+	    	})
+	    	return videos;
+    	}else{
+    		return "";
+    	}
 	}
 
 
@@ -84,7 +99,16 @@ class App extends Component {
 					<Grid className={this.gallerry_container} item xs={12} container spacing={16} alignItems="stretch" id="gallery">
 						{this.rendererResultsVideos()}
 					</Grid>
+
 				</Grid>
+				{this.state.showPopup ? 
+					<VideoComponent
+						text='Close Me'
+						closePopup={this.togglePopup.bind(this)}
+						video={this.state.videoid}
+					/>
+					: null
+				}
 			</div>
 		);
 	}
