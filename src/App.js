@@ -9,7 +9,7 @@ class App extends Component {
 		super(props);
 		this.app_container 		= "app-container";
 		this.gallerry_container = "gallery-container";
-		
+
 		this.KEY = 'AIzaSyCrLdnJGIICYiONBatfk-59h02AESqegJk';
 		this.url_search = 'https://www.googleapis.com/youtube/v3/search';
 
@@ -30,7 +30,7 @@ class App extends Component {
 		this.search = {
 			key: this.KEY,
 			part: 'id,snippet',
-			maxResults: 25,
+			maxResults: 10,
 			order: 'viewCount',
 			type:'video',
 			q: this.state.search
@@ -59,7 +59,7 @@ class App extends Component {
 	}
 
 	rendererResultsVideos(){
-		if (this.state.videos!=undefined){
+		if (this.state.videos!==undefined){
 			const videos = this.state.videos.map((video , index) => {
 	      		return( <Grid key={index} item xs={12} sm={4} md={3}> 
 	      					<div className="video-thumbs">
@@ -78,12 +78,25 @@ class App extends Component {
     	}
 	}
 
-
+	rendererResultsVideosCarousel(){
+		if (this.state.videos!==undefined){
+			const videos = this.state.videos.map((video , index) => {
+	      		return(
+	      				<div className="video-thumbs" key={index}>
+	      					<img src={video.snippet.thumbnails.default.url} alt=""/> 
+	      				</div>
+	      		);
+	    	})
+	    	return videos;
+    	}else{
+    		return "";
+    	}
+	}
 
 	render() {
 		return (
 			<div className="App">
-				<Grid className={this.app_container} container >
+				<Grid className="app-container" container >
 					<Grid item xs={12}>
 						<header className="App-header">
 							<h1 className="App-title">Search YouTube Videos</h1>
@@ -96,19 +109,30 @@ class App extends Component {
 							<input type="submit" value="Submit" />
 						</form>
 					</Grid>
-					<Grid className={this.gallerry_container} item xs={12} container spacing={16} alignItems="stretch" id="gallery">
-						{this.rendererResultsVideos()}
+					<Grid className="gallery-container" item xs={12} container spacing={16} alignItems="stretch" justify="flex-start" id="gallery">
+						{
+							// this.state.videos ? this.rendererResultsVideos() : null 
+						}
+					</Grid>
+					<Grid item xs={12} container className="carousel-container">
+						<Grid className="carousel-inner" item xs={10}>
+							{this.rendererResultsVideosCarousel()}
+						</Grid>
 					</Grid>
 
 				</Grid>
-				{this.state.showPopup ? 
-					<VideoComponent
-						text='Close Me'
-						closePopup={this.togglePopup.bind(this)}
-						video={this.state.videoid}
-					/>
-					: null
-				}
+
+				<div className={this.state.showPopup?"videocomponent active":"videocomponent"}>
+					{this.state.videoid ?
+						<VideoComponent
+							openedDetails={false}
+							video={this.state.videoid}
+							closePopup={this.togglePopup.bind(this)}	
+						/>
+						: null
+						}
+				</div>
+
 			</div>
 		);
 	}
