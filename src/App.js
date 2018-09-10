@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import VideoComponent from './components/VideoComponent';
 import './App.css';
+import VideoComponent from './components/VideoComponent';
+import CarouselComponent from './components/CarouselComponent';
 import Grid from '@material-ui/core/Grid';
 
 class App extends Component {
 
 	constructor(props) {
 		super(props);
-		this.app_container 		= "app-container";
-		this.gallerry_container = "gallery-container";
 
 		this.KEY = 'AIzaSyCrLdnJGIICYiONBatfk-59h02AESqegJk';
 		this.url_search = 'https://www.googleapis.com/youtube/v3/search';
@@ -60,7 +59,7 @@ class App extends Component {
 
 	rendererResultsVideos(){
 		if (this.state.videos!==undefined){
-			const videos = this.state.videos.map((video , index) => {
+			let videos = this.state.videos.map((video , index) => {
 	      		return( <Grid key={index} item xs={12} sm={4} md={3}> 
 	      					<div className="video-thumbs">
 		      					<img src={video.snippet.thumbnails.medium.url} alt=""/> 
@@ -78,46 +77,37 @@ class App extends Component {
     	}
 	}
 
-	rendererResultsVideosCarousel(){
-		if (this.state.videos!==undefined){
-			const videos = this.state.videos.map((video , index) => {
-	      		return(
-	      				<div className="video-thumbs" key={index}>
-	      					<img src={video.snippet.thumbnails.default.url} alt=""/> 
-	      				</div>
-	      		);
-	    	})
-	    	return videos;
-    	}else{
-    		return "";
-    	}
-	}
-
 	render() {
 		return (
 			<div className="App">
-				<Grid className="app-container" container >
-					<Grid item xs={12}>
-						<header className="App-header">
-							<h1 className="App-title">Search YouTube Videos</h1>
-						</header>
-					</Grid>
-
-					<Grid item xs={12}>
-						<form onSubmit={this.handleSubmit}>
-							<input type="text" name="search" onChange={this.handleChange}/>
-							<input type="submit" value="Submit" />
-						</form>
+				<Grid className="app-container" container direction="row" justify="center" alignItems="flex-start">
+					<Grid item xs={12} className={"form-before-search" + (this.state.videos.length>0?" found":"")} container>
+						<Grid item xs={12}>
+							<form onSubmit={this.handleSubmit}>
+								<input type="text" name="search" onChange={this.handleChange}/>
+								<input type="submit" value="Submit" />
+							</form>
+						</Grid>
 					</Grid>
 					<Grid className="gallery-container" item xs={12} container spacing={16} alignItems="stretch" justify="flex-start" id="gallery">
 						{
-							// this.state.videos ? this.rendererResultsVideos() : null 
+							this.state.videos ? this.rendererResultsVideos() : null 
 						}
 					</Grid>
-					<Grid item xs={12} container className="carousel-container">
-						<Grid className="carousel-inner" item xs={10}>
-							{this.rendererResultsVideosCarousel()}
-						</Grid>
+
+					<Grid item xs={12} container justify="center">
+						{
+							this.state.videos ? 
+							<CarouselComponent
+								className="carousel"
+								timeAnimation={2}
+								slidesToShow={10}
+								videos={this.state.videos}
+								toggleDetails={this.togglePopup.bind(this)}
+								//key={new Date()}
+							/>
+							: null
+						}
 					</Grid>
 
 				</Grid>
