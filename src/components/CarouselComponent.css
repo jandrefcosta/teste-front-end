@@ -1,0 +1,31 @@
+.carousel{
+    overflow: hidden;
+}
+
+.carousel .carousel-container{
+    margin: 0 auto;    
+}
+.carousel .carousel-container.fixed-size{
+	height: 100px;
+    display: table;
+}
+
+.carousel .carousel-container.moving{	
+	transform: translate(-140px, 0);
+    -webkit-transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.carousel-container .video-thumbs{
+	max-width: 120px;
+	padding: 10px;
+	display: table-cell;
+    vertical-align: middle;
+}
+.carousel-container .video-thumbs img{
+	cursor: pointer;
+}
+.carousel-container .video-thumbs.selected	{
+	max-width: 140px;
+	padding: 0px;
+}
