@@ -28,23 +28,16 @@ class VideoComponent extends Component {
         .then(
             (result) => {
                 const item = result.items[0];
-                this.setState({videoItem: item, openedDetails:true} )
-                this.setState({videoDetails:{
-                                    title: item.snippet.title,
-                                    channelTitle: item.snippet.channelTitle,
-                                    likeCount: item.statistics.likeCount,
-                                    dislikeCount: item.statistics.dislikeCount,
-                                    description: item.snippet.description,
-                                    viewCount: item.statistics.viewCount
-                                }
-                              })
-                // console.log(item.snippet.title)
-                // console.log(item.snippet.channelTitle)
-                // console.log(item.snippet.description)
-                // console.log("view" + item.statistics.viewCount)
-                // console.log("like" + item.statistics.likeCount)
-                // console.log("dislike" + item.statistics.dislikeCount)
-                //this.setState({videos: result[0].items})
+                this.setState({ videoItem: item, openedDetails:true})
+                this.setState({ videoDetails:{
+                                title: item.snippet.title,
+                                channelTitle: item.snippet.channelTitle,
+                                likeCount: item.statistics.likeCount,
+                                dislikeCount: item.statistics.dislikeCount,
+                                description: item.snippet.description,
+                                viewCount: item.statistics.viewCount
+                            }
+                          })
             },
             (error) => {
                 console.log(error)
@@ -64,36 +57,38 @@ class VideoComponent extends Component {
                 <div className='videocomponent-inner'>
                 { this.state.videoItem ? 
                         <Grid container justify="center">
-                            <Grid container item xs={12} sm={10} md={8}>
-                                <Grid item xs={1}>
-                                    <button onClick={ this.closeDetailsPage }>X</button>
-                                </Grid>
-                                <Grid item xs={10}>
-                                    <h2>{this.state.videoDetails.title}</h2>
-                                </Grid>
-                            </Grid>
-                            <Grid container item xs={12} sm={10} md={8}>
-                                <Grid item xs={12} className='video-wrapper'>
-                                    <YouTube videoId={this.state.videoItem.id}/>
-                                </Grid>
-                            </Grid>
-                            <Grid container item xs={12} sm={10} md={8}>
-                                <Grid container item xs={12}>
-                                    <Grid item xs={8}>
-                                        <h3>{this.state.videoDetails.channelTitle}</h3>
+                            <Grid container item xs={10}>
+                                <Grid container item xs={12} sm={10} md={8}>
+                                    <Grid item xs={1}>
+                                        <button onClick={ this.closeDetailsPage }>X</button>
                                     </Grid>
-                                    <Grid item xs={2}>
-                                        <h3>{this.state.videoDetails.likeCount}</h3>
-                                    </Grid>
-                                    <Grid item xs={2}>
-                                        <h3>{this.state.videoDetails.dislikeCount}</h3>
+                                    <Grid item xs={10}>
+                                        <h2>{this.state.videoDetails.title}</h2>
                                     </Grid>
                                 </Grid>
-                                <Grid container item xs={12}>
-                                    <p>{this.state.videoDetails.description}</p>
+                                <Grid container item xs={12} sm={10} md={8}>
+                                    <Grid item xs={12} className='video-wrapper'>
+                                        <YouTube videoId={this.state.videoItem.id}/>
+                                    </Grid>
                                 </Grid>
-                                <Grid container item xs={12}>
-                                    <p>{this.state.videoDetails.viewCount}</p>
+                                <Grid container item xs={12} sm={10} md={8}>
+                                    <Grid container item xs={12}>
+                                        <Grid item xs={6}>
+                                            <h3>{this.state.videoDetails.channelTitle}</h3>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <h5>{this.state.videoDetails.likeCount}</h5>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <h5>{this.state.videoDetails.dislikeCount}</h5>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container item xs={12}>
+                                        <p>{this.state.videoDetails.description}</p>
+                                    </Grid>
+                                    <Grid container item xs={12}>
+                                        <p>{this.state.videoDetails.viewCount}</p>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>

@@ -7,25 +7,39 @@ class CarouselComponent extends Component {
 	constructor(props) {
         super(props);
 
-        console.log(props)
-
         this.state = {	widthBase: 140, 
         				selected: -1,
         				moving: false,
         				slidesToShow: this.props.slidesToShow, 
         				timeAnimation: this.props.timeAnimation, 
-        				videos: []}
+        				videos: [],
+        				fullcarousel: false}
 
         this.setAnimationClass = this.setAnimationClass.bind(this)
     }
 
     componentDidUpdate(prevProps, prevState){
+    	console.log();
+
 		var prevVideosEquals = prevProps.videos.every(e=>this.props.videos.includes(e)); 
 		if (!prevVideosEquals){
-			this.setState({videos: []})
+			this.setState({videos: [], fullcarousel: false})
 		}
-		if((prevProps.videos.length=== 0 || !prevVideosEquals) && this.state.selected===-1){
+		if((prevProps.videos.length!== 0 || !prevVideosEquals) && this.state.selected===-1){
+
 			this.setupCarousel();
+		}
+
+		if (prevProps.videos.length!== 0 && this.state.videos.length===0){
+			this.setState({videos:this.props.videos.slice()})			
+		}
+		if (this.state.videos.length!==0 && !this.state.fullcarousel){
+			if (this.state.videos.length < this.state.slidesToShow){
+				const temp = this.state.videos.slice();
+				this.setState({videos: temp.concat(this.props.videos.slice())});
+			}else{
+				this.setState({fullcarousel: true})
+			}
 		}
 	}
 
@@ -39,11 +53,14 @@ class CarouselComponent extends Component {
 		this.setState({selected: -1})
 	}
 
+	componentWillMount()
+	{
+		console.log("teste")
+		
+	}
+
     rendererResultsVideosCarousel(){
 		if (this.props.videos.length>0){
-			if (this.state.videos.length===0){
-				this.state.videos = this.props.videos.slice()
-			}			
 			let videos = this.state.videos.map((video , index) => {
 	      		return(
       				<div className={"video-thumbs " + ((this.state.selected === index) ? 'selected' : 'default')} key={index}
@@ -61,7 +78,7 @@ class CarouselComponent extends Component {
 	}
 	
 	setupCarousel(){
-		let container = document.getElementById("carouselContainer");	    
+		let container = document.getElementById("carouselContainer");
 	    let imageNumber = this.state.videos.length;
 	    let imageWidth = this.state.widthBase;
 	    container.style.width = parseInt((imageWidth * imageNumber), 10) + "px";
