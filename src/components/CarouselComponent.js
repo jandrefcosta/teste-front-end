@@ -26,12 +26,11 @@ class CarouselComponent extends Component {
 			this.setState({videos: [], fullcarousel: false})
 		}
 		if((prevProps.videos.length!== 0 || !prevVideosEquals) && this.state.selected===-1){
-
 			this.setupCarousel();
 		}
 
 		if (prevProps.videos.length!== 0 && this.state.videos.length===0){
-			this.setState({videos:this.props.videos.slice()})			
+			this.setState({videos:this.props.videos.slice()})	
 		}
 		if (this.state.videos.length!==0 && !this.state.fullcarousel){
 			if (this.state.videos.length < this.state.slidesToShow){

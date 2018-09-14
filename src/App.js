@@ -43,7 +43,9 @@ class App extends Component {
 		.then(
 			(result) => {
 				setTimeout(()=>{ this.setState({loading: false}); }, 1000)
+				console.log(result.items)
 				this.setState({videos: result.items})
+
 			},
 			(error) => {
 				console.log(error)
@@ -59,7 +61,7 @@ class App extends Component {
 	}
 
 	rendererResultsVideos(){
-		if (this.state.videos!==undefined){
+		if (this.state.videos!==undefined || this.state.videos.length===0){
 			let videos = this.state.videos.map((video , index) => {
       		return( <Grid key={index} item xs={12} sm={4} md={3}> 
       					<div className="video-thumbs">
