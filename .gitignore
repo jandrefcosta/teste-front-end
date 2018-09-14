@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-
+/src/arquivos_base
 # testing
 /coverage
 
